@@ -8,6 +8,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var format string
+
 var rootCmd = &cobra.Command{
 	Use:   "qrg",
 	Short: "QR Code Generator",
@@ -18,7 +20,7 @@ var rootCmd = &cobra.Command{
 		}
 
 		now := time.Now()
-		formatted := now.Format("20060102_15-04-05")
+		formatted := now.Format(format)
 
 		text := args[0]
 		if err := qrcode.WriteFile(text, qrcode.Medium, 256, formatted+".png"); err != nil {
@@ -35,4 +37,5 @@ func Execute() {
 }
 
 func init() {
+	rootCmd.Flags().StringVarP(&format, "format", "f", "20060102_15-04-05", "format of the output file")
 }
