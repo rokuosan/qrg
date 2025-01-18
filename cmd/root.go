@@ -9,6 +9,7 @@ import (
 )
 
 var format string
+var outFileName string
 
 var rootCmd = &cobra.Command{
 	Use:   "qrg",
@@ -20,10 +21,14 @@ var rootCmd = &cobra.Command{
 		}
 
 		now := time.Now()
-		formatted := now.Format(format)
+
+		if outFileName == "" {
+			// 出力ファイル名が指定されていない場合は、ファイル名を作ってやる
+			outFileName = now.Format(format) + ".png"
+		}
 
 		text := args[0]
-		if err := qrcode.WriteFile(text, qrcode.Medium, 256, formatted+".png"); err != nil {
+		if err := qrcode.WriteFile(text, qrcode.Medium, 256, outFileName); err != nil {
 			panic(err)
 		}
 	},
@@ -37,5 +42,6 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().StringVarP(&format, "format", "f", "20060102_15-04-05", "format of the output file")
+	rootCmd.Flags().StringVarP(&outFileName, "output", "o", "", "Output file name")
+	rootCmd.Flags().StringVarP(&format, "format", "", "20060102_15-04-05", "format of the output file")
 }
