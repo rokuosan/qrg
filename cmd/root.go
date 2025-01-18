@@ -9,8 +9,27 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var format string
-var outFileName string
+type CommandParameters struct {
+	format string
+	output string
+}
+
+var params CommandParameters
+
+// createFileName は、ファイル名を作成する
+// extension は、ピリオドなしの拡張子を指定する
+func createFileName(fileName string, format string, extension string) string {
+
+	outFileName := fileName
+
+	now := time.Now()
+	if fileName == "" {
+		// 出力ファイル名が指定されていない場合は、ファイル名を作ってやる
+		outFileName = fmt.Sprintf("%s.%s", now.Format(format), extension)
+	}
+
+	return outFileName
+}
 
 var rootCmd = &cobra.Command{
 	Use:   "qrg",
@@ -21,16 +40,10 @@ var rootCmd = &cobra.Command{
 			return
 		}
 
-		now := time.Now()
-
-		if outFileName == "" {
-			// 出力ファイル名が指定されていない場合は、ファイル名を作ってやる
-			outFileName = now.Format(format) + ".png"
-		}
+		outFileName := createFileName(params.output, params.format, "png")
 
 		text := args[0]
 		if err := qrcode.WriteFile(text, qrcode.Medium, 256, outFileName); err != nil {
-
 			panic(err)
 		}
 
@@ -46,6 +59,6 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().StringVarP(&outFileName, "output", "o", "", "Output file name")
-	rootCmd.Flags().StringVarP(&format, "format", "", "20060102_15-04-05", "format of the output file")
+	rootCmd.Flags().StringVarP(&params.output, "output", "o", "", "Output file name")
+	rootCmd.Flags().StringVarP(&params.format, "format", "", "20060102_15-04-05", "format of the output file")
 }
