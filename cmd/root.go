@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"time"
 
@@ -19,11 +20,14 @@ var rootCmd = &cobra.Command{
 
 		now := time.Now()
 		formatted := now.Format("20060102_15-04-05")
+		filename := fmt.Sprintf("%s.png", formatted)
 
 		text := args[0]
-		if err := qrcode.WriteFile(text, qrcode.Medium, 256, formatted+".png"); err != nil {
+		if err := qrcode.WriteFile(text, qrcode.Medium, 256, filename); err != nil {
 			panic(err)
 		}
+
+		fmt.Println(filename)
 	},
 }
 
