@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"time"
 
@@ -29,8 +30,11 @@ var rootCmd = &cobra.Command{
 
 		text := args[0]
 		if err := qrcode.WriteFile(text, qrcode.Medium, 256, outFileName); err != nil {
+
 			panic(err)
 		}
+
+		fmt.Println(outFileName)
 	},
 }
 
