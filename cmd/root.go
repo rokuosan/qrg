@@ -9,6 +9,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var format string
+var outFileName string
+
 var rootCmd = &cobra.Command{
 	Use:   "qrg",
 	Short: "QR Code Generator",
@@ -19,15 +22,19 @@ var rootCmd = &cobra.Command{
 		}
 
 		now := time.Now()
-		formatted := now.Format("20060102_15-04-05")
-		filename := fmt.Sprintf("%s.png", formatted)
+
+		if outFileName == "" {
+			// 出力ファイル名が指定されていない場合は、ファイル名を作ってやる
+			outFileName = now.Format(format) + ".png"
+		}
 
 		text := args[0]
-		if err := qrcode.WriteFile(text, qrcode.Medium, 256, filename); err != nil {
+		if err := qrcode.WriteFile(text, qrcode.Medium, 256, outFileName); err != nil {
+
 			panic(err)
 		}
 
-		fmt.Println(filename)
+		fmt.Println(outFileName)
 	},
 }
 
@@ -39,4 +46,6 @@ func Execute() {
 }
 
 func init() {
+	rootCmd.Flags().StringVarP(&outFileName, "output", "o", "", "Output file name")
+	rootCmd.Flags().StringVarP(&format, "format", "", "20060102_15-04-05", "format of the output file")
 }
