@@ -1,3 +1,4 @@
 .DS_Store
 qrg
-*.png
+*.png# Added by goreleaser init:
+dist/
