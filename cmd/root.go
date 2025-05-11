@@ -48,7 +48,7 @@ var rootCmd = &cobra.Command{
 			return
 		}
 
-		outFileName := createFileName(params.output, params.format, "png")
+		outFileName := createFileName(time.Now(), params.output, params.format, "png")
 		file, err := os.Create(outFileName)
 		if err != nil {
 			fmt.Println("Failed to create file:", err)
@@ -74,15 +74,10 @@ func Execute() {
 
 // createFileName は、ファイル名を作成する
 // extension は、ピリオドなしの拡張子を指定する
-func createFileName(fileName string, format string, extension string) string {
-
-	outFileName := fileName
-
-	now := time.Now()
-	if fileName == "" {
-		// 出力ファイル名が指定されていない場合は、ファイル名を作ってやる
-		outFileName = fmt.Sprintf("%s.%s", now.Format(format), extension)
+func createFileName(now time.Time, fileName string, format string, extension string) string {
+	if fileName != "" {
+		return fileName
 	}
-
-	return outFileName
+	// 出力ファイル名が指定されていない場合は、ファイル名を作ってやる
+	return fmt.Sprintf("%s.%s", now.Format(format), extension)
 }
