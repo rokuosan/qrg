@@ -18,19 +18,10 @@ type CommandParameters struct {
 
 var params CommandParameters
 
-// createFileName は、ファイル名を作成する
-// extension は、ピリオドなしの拡張子を指定する
-func createFileName(fileName string, format string, extension string) string {
-
-	outFileName := fileName
-
-	now := time.Now()
-	if fileName == "" {
-		// 出力ファイル名が指定されていない場合は、ファイル名を作ってやる
-		outFileName = fmt.Sprintf("%s.%s", now.Format(format), extension)
-	}
-
-	return outFileName
+func init() {
+	rootCmd.Flags().StringVarP(&params.output, "output", "o", "", "Output file name")
+	rootCmd.Flags().StringVarP(&params.format, "format", "", "20060102_15-04-05", "format of the output file")
+	rootCmd.Flags().BoolVarP(&params.clipboard, "clipboard", "c", false, "Copy to clipboard")
 }
 
 var rootCmd = &cobra.Command{
@@ -81,8 +72,17 @@ func Execute() {
 	}
 }
 
-func init() {
-	rootCmd.Flags().StringVarP(&params.output, "output", "o", "", "Output file name")
-	rootCmd.Flags().StringVarP(&params.format, "format", "", "20060102_15-04-05", "format of the output file")
-	rootCmd.Flags().BoolVarP(&params.clipboard, "clipboard", "c", false, "Copy to clipboard")
+// createFileName は、ファイル名を作成する
+// extension は、ピリオドなしの拡張子を指定する
+func createFileName(fileName string, format string, extension string) string {
+
+	outFileName := fileName
+
+	now := time.Now()
+	if fileName == "" {
+		// 出力ファイル名が指定されていない場合は、ファイル名を作ってやる
+		outFileName = fmt.Sprintf("%s.%s", now.Format(format), extension)
+	}
+
+	return outFileName
 }
