@@ -7,11 +7,13 @@ import (
 
 	"github.com/skip2/go-qrcode"
 	"github.com/spf13/cobra"
+	"golang.design/x/clipboard"
 )
 
 type CommandParameters struct {
-	format string
-	output string
+	format    string
+	output    string
+	clipboard bool
 }
 
 var params CommandParameters
@@ -39,12 +41,33 @@ var rootCmd = &cobra.Command{
 			cmd.Help()
 			return
 		}
+		if err := clipboard.Init(); err != nil {
+			panic(err)
+		}
+
+		data, err := qrcode.Encode(args[0], qrcode.Medium, 256)
+		if err != nil {
+			fmt.Println("Failed to generate PNG:", err)
+			return
+		}
+
+		if params.clipboard {
+			clipboard.Write(clipboard.FmtImage, data)
+			fmt.Println("Copied to clipboard")
+			return
+		}
 
 		outFileName := createFileName(params.output, params.format, "png")
-
-		text := args[0]
-		if err := qrcode.WriteFile(text, qrcode.Medium, 256, outFileName); err != nil {
-			panic(err)
+		file, err := os.Create(outFileName)
+		if err != nil {
+			fmt.Println("Failed to create file:", err)
+			return
+		}
+		defer file.Close()
+		_, err = file.Write(data)
+		if err != nil {
+			fmt.Println("Failed to write to file:", err)
+			return
 		}
 
 		fmt.Println(outFileName)
@@ -61,4 +84,5 @@ func Execute() {
 func init() {
 	rootCmd.Flags().StringVarP(&params.output, "output", "o", "", "Output file name")
 	rootCmd.Flags().StringVarP(&params.format, "format", "", "20060102_15-04-05", "format of the output file")
+	rootCmd.Flags().BoolVarP(&params.clipboard, "clipboard", "c", false, "Copy to clipboard")
 }
