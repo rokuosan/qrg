@@ -20,6 +20,9 @@ builds:
       - linux
       - windows
       - darwin
+    ldflags:
+      - -X github.com/rokuosan/qrg/cmd.version={{ .Tag }}
+      - -X github.com/rokuosan/qrg/cmd.commit={{ .ShortCommit }}
 
 archives:
   - formats: [tar.gz]
