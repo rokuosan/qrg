@@ -15,6 +15,7 @@ type CommandParameters struct {
 	format    string
 	output    string
 	clipboard bool
+	size      int
 }
 
 var params CommandParameters
@@ -23,6 +24,7 @@ func init() {
 	rootCmd.Flags().StringVarP(&params.output, "output", "o", "", "Output file name")
 	rootCmd.Flags().StringVarP(&params.format, "format", "", "20060102_15-04-05", "format of the output file")
 	rootCmd.Flags().BoolVarP(&params.clipboard, "clipboard", "c", false, "Copy to clipboard")
+	rootCmd.Flags().IntVarP(&params.size, "size", "s", 256, "QR code size")
 
 	params.output = createFileName(time.Now(), params.output, params.format, "png")
 }
@@ -55,7 +57,7 @@ var rootCmd = &cobra.Command{
 		}
 		defer w.Close()
 
-		if qr.Write(256, w); err != nil {
+		if qr.Write(params.size, w); err != nil {
 			fmt.Println("Failed to write to file:", err)
 			return
 		}
