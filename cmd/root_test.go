@@ -46,3 +46,38 @@ func Test_createFileName(t *testing.T) {
 		})
 	}
 }
+
+func Test_getWriteCloser(t *testing.T) {
+	type args = getWriterCloserInput
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "Test with clipboard",
+			args: args{
+				isClipboard: true,
+				filename:    "",
+			},
+		},
+		{
+			name: "Test with file",
+			args: args{
+				isClipboard: false,
+				filename:    "test.png",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := getWriteCloser(tt.args)
+			if err != nil {
+				t.Errorf("getWriteCloser() error = %v", err)
+				return
+			}
+			if got == nil {
+				t.Errorf("getWriteCloser() = nil")
+			}
+		})
+	}
+}

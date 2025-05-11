@@ -2,12 +2,13 @@ package cmd
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"time"
 
+	"github.com/rokuosan/qrg/internal/clipboard"
 	"github.com/skip2/go-qrcode"
 	"github.com/spf13/cobra"
-	"golang.design/x/clipboard"
 )
 
 type CommandParameters struct {
@@ -22,6 +23,8 @@ func init() {
 	rootCmd.Flags().StringVarP(&params.output, "output", "o", "", "Output file name")
 	rootCmd.Flags().StringVarP(&params.format, "format", "", "20060102_15-04-05", "format of the output file")
 	rootCmd.Flags().BoolVarP(&params.clipboard, "clipboard", "c", false, "Copy to clipboard")
+
+	params.output = createFileName(time.Now(), params.output, params.format, "png")
 }
 
 var rootCmd = &cobra.Command{
@@ -36,32 +39,32 @@ var rootCmd = &cobra.Command{
 			panic(err)
 		}
 
-		data, err := qrcode.Encode(args[0], qrcode.Medium, 256)
+		qr, err := qrcode.New(args[0], qrcode.Medium)
 		if err != nil {
 			fmt.Println("Failed to generate PNG:", err)
 			return
 		}
 
-		if params.clipboard {
-			clipboard.Write(clipboard.FmtImage, data)
-			fmt.Println("Copied to clipboard")
+		w, err := getWriteCloser(getWriterCloserInput{
+			isClipboard: params.clipboard,
+			filename:    params.output,
+		})
+		if err != nil {
+			fmt.Println("Failed to create writer:", err)
 			return
 		}
+		defer w.Close()
 
-		outFileName := createFileName(time.Now(), params.output, params.format, "png")
-		file, err := os.Create(outFileName)
-		if err != nil {
-			fmt.Println("Failed to create file:", err)
-			return
-		}
-		defer file.Close()
-		_, err = file.Write(data)
-		if err != nil {
+		if qr.Write(256, w); err != nil {
 			fmt.Println("Failed to write to file:", err)
 			return
 		}
 
-		fmt.Println(outFileName)
+		if params.clipboard {
+			fmt.Println("Copied to clipboard")
+		} else {
+			fmt.Println(params.output)
+		}
 	},
 }
 
@@ -80,4 +83,21 @@ func createFileName(now time.Time, fileName string, format string, extension str
 	}
 	// 出力ファイル名が指定されていない場合は、ファイル名を作ってやる
 	return fmt.Sprintf("%s.%s", now.Format(format), extension)
+}
+
+type getWriterCloserInput struct {
+	isClipboard bool
+	filename    string
+}
+
+func getWriteCloser(input getWriterCloserInput) (io.WriteCloser, error) {
+	if input.isClipboard {
+		return clipboard.New(), nil
+	}
+	f, err := os.Create(input.filename)
+	if err != nil {
+		fmt.Println("Failed to create file:", err)
+		return nil, err
+	}
+	return f, nil
 }
