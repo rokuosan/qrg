@@ -1,6 +1,6 @@
 # qrg
 
-A Simple QRCode Generator
+A Simple QRCode Generator.
 
 ## Installation
 
@@ -13,6 +13,12 @@ go install github.com/rokuosan/qrg@latest
 ```bash
 qrg <text>
 ```
+
+## Options
+
+- `--format` : Specify the datetime format. The default is the Go format `20060102_150405`.
+- `-c` `--clipboard` : Save the QR code to the clipboard instead of a file.
+- `-o` `--output` : Specify the output file name. (e.g. `qrg -o qrcode.png "text"`)
 
 ## Example
 
@@ -31,6 +37,12 @@ On macOS, you can use the open command to view the generated QR code in the Prev
 $ qrg "https://example.com/" | xargs open
 ```
 
+If you want to save the QR code to your clipboard, you can use the `--clipboard`(`-c`) option.
+
+```bash
+$ qrg -c "https://example.com/"
+```
+
 ## License
 
-MIT
+This software is released under the MIT License, see LICENSE.
