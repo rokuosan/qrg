@@ -1,17 +1,9 @@
-# This is an example .goreleaser.yml file with some sensible defaults.
-# Make sure to check the documentation at https://goreleaser.com
-
-# The lines below are called `modelines`. See `:help modeline`
-# Feel free to remove those if you don't want/need to use them.
-# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
-# vim: set ts=2 sw=2 tw=0 fo=cnqoj
-
 version: 2
 
-before:
-  hooks:
-    - find . -name '*_test.go' -type f -delete
-    - go mod tidy
+# before:
+#   hooks:
+#     - find . -name '*_test.go' -type f -delete
+#     - go mod tidy
 
 builds:
   - env:
