@@ -16,7 +16,7 @@ qrg <text>
 
 ## Options
 
-- `--format` : Specify the datetime format. The default is the go format `20060102_150405`.
+- `--format` : Specify the datetime format. The default is the Go format `20060102_150405`.
 - `-c` `--clipboard` : Save the QR code to the clipboard instead of a file.
 - `-o` `--output` : Specify the output file name. (e.g. `qrg -o qrcode.png "text"`)
 
