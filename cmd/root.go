@@ -16,15 +16,22 @@ type CommandParameters struct {
 	output    string
 	clipboard bool
 	size      int
+	version   bool
 }
 
 var params CommandParameters
+
+var (
+	version = "dev"
+	commit  = "none"
+)
 
 func init() {
 	rootCmd.Flags().StringVarP(&params.output, "output", "o", "", "Output file name")
 	rootCmd.Flags().StringVarP(&params.format, "format", "", "20060102_15-04-05", "format of the output file")
 	rootCmd.Flags().BoolVarP(&params.clipboard, "clipboard", "c", false, "Copy to clipboard")
 	rootCmd.Flags().IntVarP(&params.size, "size", "s", 256, "QR code size")
+	rootCmd.Flags().BoolVarP(&params.version, "version", "v", false, "Show version information")
 
 	params.output = createFileName(time.Now(), params.output, params.format, "png")
 }
@@ -35,6 +42,10 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
 			cmd.Help()
+			return
+		}
+		if params.version {
+			fmt.Printf("%s (%s)\n", version, commit)
 			return
 		}
 		if err := clipboard.Init(); err != nil {
