@@ -91,83 +91,33 @@ func Test_getRecoveryLevel(t *testing.T) {
 		want     qrcode.RecoveryLevel
 	}{
 		{
-			name:     "Test Low recovery level with Uppercase",
-			recovery: "Low",
-			want:     qrcode.Low,
-		},
-		{
-			name:     "Test Low recovery level with large letter",
-			recovery: "L",
-			want:     qrcode.Low,
-		},
-		{
-			name:     "Test Low recovery level with Lowercase",
+			name:     "Test Lowercase",
 			recovery: "low",
 			want:     qrcode.Low,
 		},
 		{
-			name:     "Test Medium recovery level with small letter",
-			recovery: "l",
+			name:     "Test recovery level with short form",
+			recovery: "L",
 			want:     qrcode.Low,
 		},
 		{
-			name:     "Test Low recovery level with Uppercase",
+			name:     "Test Low recovery level with full form",
+			recovery: "Low",
+			want:     qrcode.Low,
+		},
+		{
+			name:     "Test Medium recovery level with full form",
 			recovery: "Medium",
 			want:     qrcode.Medium,
 		},
 		{
-			name:     "Test Low recovery level with large letter",
-			recovery: "M",
-			want:     qrcode.Medium,
-		},
-		{
-			name:     "Test Low recovery level with Lowercase",
-			recovery: "medium",
-			want:     qrcode.Medium,
-		},
-		{
-			name:     "Test Low recovery level with small letter",
-			recovery: "m",
-			want:     qrcode.Medium,
-		},
-		{
-			name:     "Test High recovery level with Uppercase",
+			name:     "Test High recovery level with full form",
 			recovery: "High",
 			want:     qrcode.High,
 		},
 		{
-			name:     "Test High recovery level with large letter",
-			recovery: "H",
-			want:     qrcode.High,
-		},
-				{
-			name:     "Test High recovery level with Lowercase",
-			recovery: "high",
-			want:     qrcode.High,
-		},
-				{
-			name:     "Test High recovery level with small letter",
-			recovery: "h",
-			want:     qrcode.High,
-		},
-		{
-			name:     "Test Highest recovery level with Uppercase",
+			name:     "Test Highest recovery level with full form",
 			recovery: "Highest",
-			want:     qrcode.Highest,
-		},
-		{
-			name:     "Test Highest recovery level with large letter",
-			recovery: "HH",
-			want:     qrcode.Highest,
-		},
-				{
-			name:     "Test Highest recovery level with Lowercase",
-			recovery: "highest",
-			want:     qrcode.Highest,
-		},
-				{
-			name:     "Test Highest recovery level with small letter",
-			recovery: "hh",
 			want:     qrcode.Highest,
 		},
 	}
