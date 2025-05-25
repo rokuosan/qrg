@@ -44,7 +44,7 @@ If you want to save the QR code to your clipboard, you can use the `--clipboard`
 $ qrg -c "https://example.com/"
 ```
 
-When you use the `--recovery` option, you can specify the error correction level.
+When you use the `--recovery`(`-r`) option, you can specify the error correction level.
 
 ```bash
 $ qrg -r H "https://example.com/"
