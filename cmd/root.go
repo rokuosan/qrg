@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -95,13 +96,13 @@ var rootCmd = &cobra.Command{
 func parseRecoveryLevel(level string) (qrcode.RecoveryLevel, error) {
 	level = strings.ToUpper(level)
 	switch level {
-	case "L", "LOW", "7":
+	case "L", "LOW", strconv.Itoa(int(qrcode.Low)), "7":
 		return qrcode.Low, nil
-	case "M", "MEDIUM", "15":
+	case "M", "MEDIUM", strconv.Itoa(int(qrcode.Medium)), "15":
 		return qrcode.Medium, nil
-	case "Q", "QUARTILE", "25":
+	case "Q", "QUARTILE", strconv.Itoa(int(qrcode.High)), "25":
 		return qrcode.High, nil
-	case "H", "HIGHEST", "30":
+	case "H", "HIGHEST", strconv.Itoa(int(qrcode.Highest)), "30":
 		return qrcode.Highest, nil
 	default:
 		return qrcode.Medium, fmt.Errorf("invalid error correction level: %s", level)
