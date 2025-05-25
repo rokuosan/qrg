@@ -17,6 +17,7 @@ type CommandParameters struct {
 	clipboard bool
 	size      int
 	version   bool
+	recovery string
 }
 
 var params CommandParameters
@@ -32,6 +33,7 @@ func init() {
 	rootCmd.Flags().BoolVarP(&params.clipboard, "clipboard", "c", false, "Copy to clipboard")
 	rootCmd.Flags().IntVarP(&params.size, "size", "s", 256, "QR code size")
 	rootCmd.Flags().BoolVar(&params.version, "version", false, "Show version information")
+	rootCmd.Flags().StringVarP(&params.recovery, "recovery", "r", "Medium", "Recovery level (Low, Medium, Quartile, High)")
 
 	params.output = createFileName(time.Now(), params.output, params.format, "png")
 }
@@ -52,7 +54,7 @@ var rootCmd = &cobra.Command{
 			panic(err)
 		}
 
-		qr, err := qrcode.New(args[0], qrcode.Medium)
+		qr, err := qrcode.New(args[0], getRecoveryLevel(params.recovery))
 		if err != nil {
 			fmt.Println("Failed to generate PNG:", err)
 			return
@@ -113,4 +115,20 @@ func getWriteCloser(input getWriterCloserInput) (io.WriteCloser, error) {
 		return nil, err
 	}
 	return f, nil
+}
+
+func getRecoveryLevel(level string) qrcode.RecoveryLevel {
+	switch level {
+	case "Low":
+		return qrcode.Low
+	case "Medium":
+		return qrcode.Medium
+	case "High":
+		return qrcode.High
+	case "Highest":
+		return qrcode.Highest
+	default:
+		fmt.Printf("Unknown recovery level: %s, defaulting to Medium\n", level)
+		return qrcode.Medium
+	}
 }
