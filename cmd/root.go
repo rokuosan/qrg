@@ -40,12 +40,12 @@ var rootCmd = &cobra.Command{
 	Use:   "qrg",
 	Short: "QR Code Generator",
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) == 0 {
-			cmd.Help()
-			return
-		}
 		if params.version {
 			fmt.Printf("%s (%s)\n", version, commit)
+			return
+		}
+		if len(args) == 0 {
+			cmd.Help()
 			return
 		}
 		if err := clipboard.Init(); err != nil {
