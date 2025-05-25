@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/rokuosan/qrg/internal/clipboard"
@@ -13,6 +15,7 @@ import (
 
 type CommandParameters struct {
 	format    string
+	level     string
 	output    string
 	clipboard bool
 	size      int
@@ -29,6 +32,7 @@ var (
 func init() {
 	rootCmd.Flags().StringVarP(&params.output, "output", "o", "", "Output file name")
 	rootCmd.Flags().StringVarP(&params.format, "format", "", "20060102_15-04-05", "format of the output file")
+	rootCmd.Flags().StringVarP(&params.level, "level", "l", "M", "Error Recovery level (L, M, Q, H or 7, 15, 25, 30)")
 	rootCmd.Flags().BoolVarP(&params.clipboard, "clipboard", "c", false, "Copy to clipboard")
 	rootCmd.Flags().IntVarP(&params.size, "size", "s", 256, "QR code size")
 	rootCmd.Flags().BoolVar(&params.version, "version", false, "Show version information")
@@ -52,7 +56,13 @@ var rootCmd = &cobra.Command{
 			panic(err)
 		}
 
-		qr, err := qrcode.New(args[0], qrcode.Medium)
+		recoveryLevel, err := parseRecoveryLevel(params.level)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		qr, err := qrcode.New(args[0], recoveryLevel)
 		if err != nil {
 			fmt.Println("Failed to generate PNG:", err)
 			return
@@ -79,6 +89,24 @@ var rootCmd = &cobra.Command{
 			fmt.Println(params.output)
 		}
 	},
+}
+
+// parseRecoveryLevel は、文字列からqrcode.RecoveryLevelを解析する
+// 有効なlevelは、L, M, Q, H(大文字・小文字区別なし) または 7, 15, 25, 30
+func parseRecoveryLevel(level string) (qrcode.RecoveryLevel, error) {
+	level = strings.ToUpper(level)
+	switch level {
+	case "L", "LOW", strconv.Itoa(int(qrcode.Low)), "7":
+		return qrcode.Low, nil
+	case "M", "MEDIUM", strconv.Itoa(int(qrcode.Medium)), "15":
+		return qrcode.Medium, nil
+	case "Q", "QUARTILE", strconv.Itoa(int(qrcode.High)), "25":
+		return qrcode.High, nil
+	case "H", "HIGHEST", strconv.Itoa(int(qrcode.Highest)), "30":
+		return qrcode.Highest, nil
+	default:
+		return qrcode.Medium, fmt.Errorf("invalid error correction level: %s", level)
+	}
 }
 
 func Execute() {

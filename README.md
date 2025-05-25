@@ -17,6 +17,11 @@ qrg <text>
 ## Options
 
 - `--format` : Specify the datetime format. The default is the Go format `20060102_150405`.
+- `-l` `--level` : Specify the error correction level. The default is `M`. Available levels are:
+  - `L` `low` `7`: 7% of codewords can be restored.
+  - `M` `medium` `15`: 15% of codewords can be restored.
+  - `Q` `quartile` `25`: 25% of codewords can be restored.
+  - `H` `high` `30`: 30% of codewords can be restored.
 - `-c` `--clipboard` : Save the QR code to the clipboard instead of a file.
 - `-o` `--output` : Specify the output file name. (e.g. `qrg -o qrcode.png "text"`)
 
