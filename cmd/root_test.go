@@ -91,27 +91,112 @@ func Test_parseRecoveryLevel(t *testing.T) {
 		wantLevel qrcode.RecoveryLevel
 		wantErr   bool
 	}{
-		{"L uppercase", "L", qrcode.Low, false},
-		{"l lowercase", "l", qrcode.Low, false},
-		{"LOW", "Low", qrcode.Low, false},
-		{"7", "7", qrcode.Low, false},
+		{
+			"L uppercase",
+			"L",
+			qrcode.Low,
+			false,
+		},
+		{
+			"l lowercase",
+			"l",
+			qrcode.Low,
+			false,
+		},
+		{
+			"LOW",
+			"Low",
+			qrcode.Low,
+			false,
+		},
+		{
+			"7",
+			"7",
+			qrcode.Low,
+			false,
+		},
 
-		{"M uppercase", "M", qrcode.Medium, false},
-		{"m lowercase", "m", qrcode.Medium, false},
-		{"MEDIUM", "Medium", qrcode.Medium, false},
-		{"15", "15", qrcode.Medium, false},
+		{
+			"M uppercase",
+			"M",
+			qrcode.Medium,
+			false,
+		},
+		{
+			"m lowercase",
+			"m",
+			qrcode.Medium,
+			false,
+		},
+		{
+			"MEDIUM",
+			"Medium",
+			qrcode.Medium,
+			false,
+		},
+		{
+			"15",
+			"15",
+			qrcode.Medium,
+			false,
+		},
 
-		{"Q uppercase", "Q", qrcode.High, false},
-		{"q lowercase", "q", qrcode.High, false},
-		{"QUARTILE", "Quartile", qrcode.High, false},
-		{"25", "25", qrcode.High, false},
+		{
+			"Q uppercase",
+			"Q",
+			qrcode.High,
+			false,
+		},
+		{
+			"q lowercase",
+			"q",
+			qrcode.High,
+			false,
+		},
+		{
+			"QUARTILE",
+			"Quartile",
+			qrcode.High,
+			false,
+		},
+		{
+			"25",
+			"25",
+			qrcode.High,
+			false,
+		},
 
-		{"H uppercase", "H", qrcode.Highest, false},
-		{"h lowercase", "h", qrcode.Highest, false},
-		{"HIGHEST", "Highest", qrcode.Highest, false},
-		{"30", "30", qrcode.Highest, false},
+		{
+			"H uppercase",
+			"H",
+			qrcode.Highest,
+			false,
+		},
+		{
+			"h lowercase",
+			"h",
+			qrcode.Highest,
+			false,
+		},
+		{
+			"HIGHEST",
+			"Highest",
+			qrcode.Highest,
+			false,
+		},
+		{
+			"30",
+			"30",
+			qrcode.Highest,
+			false,
+		},
 
-		{"invalid", "X", qrcode.Medium, true},
+		{
+			"invalid",
+			"X",
+			qrcode.Medium,
+			true,
+		},
 	}
 
 	for _, tt := range tests {
