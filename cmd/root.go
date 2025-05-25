@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/rokuosan/qrg/internal/clipboard"
@@ -118,14 +119,15 @@ func getWriteCloser(input getWriterCloserInput) (io.WriteCloser, error) {
 }
 
 func getRecoveryLevel(level string) qrcode.RecoveryLevel {
+	level = strings.ToUpper(level)
 	switch level {
-	case "Low":
+	case "LOW", "L":
 		return qrcode.Low
-	case "Medium":
+	case "MEDIUM", "M":
 		return qrcode.Medium
-	case "High":
+	case "HIGH", "H":
 		return qrcode.High
-	case "Highest":
+	case "HIGHEST", "HH":
 		return qrcode.Highest
 	default:
 		fmt.Printf("Unknown recovery level: %s, defaulting to Medium\n", level)

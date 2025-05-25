@@ -3,6 +3,8 @@ package cmd
 import (
 	"testing"
 	"time"
+
+	"github.com/skip2/go-qrcode"
 )
 
 func Test_createFileName(t *testing.T) {
@@ -77,6 +79,102 @@ func Test_getWriteCloser(t *testing.T) {
 			}
 			if got == nil {
 				t.Errorf("getWriteCloser() = nil")
+			}
+		})
+	}
+}
+
+func Test_getRecoveryLevel(t *testing.T) {
+	tests := []struct {
+		name     string
+		recovery string
+		want     qrcode.RecoveryLevel
+	}{
+		{
+			name:     "Test Low recovery level with Uppercase",
+			recovery: "Low",
+			want:     qrcode.Low,
+		},
+		{
+			name:     "Test Low recovery level with large letter",
+			recovery: "L",
+			want:     qrcode.Low,
+		},
+		{
+			name:     "Test Low recovery level with Lowercase",
+			recovery: "low",
+			want:     qrcode.Low,
+		},
+		{
+			name:     "Test Medium recovery level with small letter",
+			recovery: "l",
+			want:     qrcode.Low,
+		},
+		{
+			name:     "Test Low recovery level with Uppercase",
+			recovery: "Medium",
+			want:     qrcode.Medium,
+		},
+		{
+			name:     "Test Low recovery level with large letter",
+			recovery: "M",
+			want:     qrcode.Medium,
+		},
+		{
+			name:     "Test Low recovery level with Lowercase",
+			recovery: "medium",
+			want:     qrcode.Medium,
+		},
+		{
+			name:     "Test Low recovery level with small letter",
+			recovery: "m",
+			want:     qrcode.Medium,
+		},
+		{
+			name:     "Test High recovery level with Uppercase",
+			recovery: "High",
+			want:     qrcode.High,
+		},
+		{
+			name:     "Test High recovery level with large letter",
+			recovery: "H",
+			want:     qrcode.High,
+		},
+				{
+			name:     "Test High recovery level with Lowercase",
+			recovery: "high",
+			want:     qrcode.High,
+		},
+				{
+			name:     "Test High recovery level with small letter",
+			recovery: "h",
+			want:     qrcode.High,
+		},
+		{
+			name:     "Test Highest recovery level with Uppercase",
+			recovery: "Highest",
+			want:     qrcode.Highest,
+		},
+		{
+			name:     "Test Highest recovery level with large letter",
+			recovery: "HH",
+			want:     qrcode.Highest,
+		},
+				{
+			name:     "Test Highest recovery level with Lowercase",
+			recovery: "highest",
+			want:     qrcode.Highest,
+		},
+				{
+			name:     "Test Highest recovery level with small letter",
+			recovery: "hh",
+			want:     qrcode.Highest,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := getRecoveryLevel(tt.recovery); got != tt.want {
+				t.Errorf("getRecoveryLevel() = %v, want %v", got, tt.want)
 			}
 		})
 	}
