@@ -19,7 +19,7 @@ qrg <text>
 - `--format` : Specify the datetime format. The default is the Go format `20060102_150405`.
 - `-c` `--clipboard` : Save the QR code to the clipboard instead of a file.
 - `-o` `--output` : Specify the output file name. (e.g. `qrg -o qrcode.png "text"`)
-- `-r` `--recovery` : Specify the error correction level. The default is `Medium`. Available options are `Low`, `Medium`, `High`, and `Highest`.
+- `-r` `--recovery` : Specify the error correction level. The default is `M`. Available options are `L`, `M`, `H`, and `HH`.
 
 ## Example
 
@@ -47,7 +47,7 @@ $ qrg -c "https://example.com/"
 When you use the `--recovery` option, you can specify the error correction level.
 
 ```bash
-$ qrg --recovery High "https://example.com/"
+$ qrg -r H "https://example.com/"
 ```
 
 ## License
