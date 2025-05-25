@@ -31,7 +31,7 @@ func init() {
 	rootCmd.Flags().StringVarP(&params.format, "format", "", "20060102_15-04-05", "format of the output file")
 	rootCmd.Flags().BoolVarP(&params.clipboard, "clipboard", "c", false, "Copy to clipboard")
 	rootCmd.Flags().IntVarP(&params.size, "size", "s", 256, "QR code size")
-	rootCmd.Flags().BoolVarP(&params.version, "version", "v", false, "Show version information")
+	rootCmd.Flags().BoolVar(&params.version, "version", false, "Show version information")
 
 	params.output = createFileName(time.Now(), params.output, params.format, "png")
 }
