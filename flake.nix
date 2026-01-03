@@ -48,7 +48,7 @@
           "-X" "main.builtBy=nix"
         ];
 
-        env.CGO_ENABLED = "0";
+        env.CGO_ENABLED = "1";
 
         meta = with lib; {
           description = "QR code CLI generator";
