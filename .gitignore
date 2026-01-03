@@ -5,4 +5,4 @@ qrg
 # Added by goreleaser init:
 dist/
 # Nix build outputs
-result/bin/*
+/result
