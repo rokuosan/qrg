@@ -1,5 +1,5 @@
 {
-  description = "qrg - QR code cli generator (qrg <text>)";
+  description = "qrg - QR code cli generator";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -17,30 +17,50 @@
       ];
 
       forAllSystems = f: lib.genAttrs systems (system:
-        let
-          pkgs = import nixpkgs { inherit system; };
-        in
-          f { inherit system pkgs; }
+        let pkgs = import nixpkgs { inherit system; };
+        in f { inherit pkgs system; }
       );
 
-      version = "0.3.1";
+      commit = self.rev or "dirty";
+      date =
+        let d = self.lastModifiedDate or "19700101";
+        in "${builtins.substring 0 4 d}-${builtins.substring 4 2 d}-${builtins.substring 6 2 d}T00:00:00Z";
+      
+      version =
+        if self ? rev
+        then "unstable-${builtins.substring 0 8 (self.rev)}"
+        else "dev";
     in
     {
-      packages = forAllSystems ({ pkgs, ... }: rec {
+      packages = forAllSystems ({ pkgs, system }: rec {
         qrg = pkgs.buildGoModule {
           pname = "qrg";
           inherit version;
+
           src = self;
 
           vendorHash = "sha256-wzMLu5HV2Ypebjlc+M4G2n54idbPJE0UZN9KxxehCsE=";
 
-          ldflags = [ "-s" "-w" ];
+          flags = [ "-trimpath" ];
+
+          ldflags = [
+            "-s" "-w"
+            "-X" "main.version=${version}"
+            "-X" "main.commit=${commit}"
+            "-X" "main.date=${date}"
+            "-X" "main.builtBy=nix"
+          ];
+
+          env = {
+            CGO_ENABLED = "0";
+          };
 
           meta = with lib; {
-            description = "qrcode cli generator; run \"qrg <message>\" on your terminal";
+            description = "QR code CLI generator";
             homepage = "https://github.com/rokuosan/qrg";
             license = licenses.mit;
             mainProgram = "qrg";
+            platforms = platforms.all;
           };
         };
 
@@ -65,16 +85,6 @@
         };
       });
 
-      checks = forAllSystems ({ system, ... }: {
-        build = self.packages.${system}.qrg;
-      });
-
       formatter = forAllSystems ({ pkgs, ... }: pkgs.nixfmt-rfc-style);
-
-      # overlayとしても使えるようにする
-      overlays.default = final: prev: {
-        qrg = self.packages.${prev.system}.qrg;
-      };
     };
 }
-
