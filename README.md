@@ -3,11 +3,15 @@
 A Simple QRCode Generator.
 
 ## Installation
-
+### go install
 ```bash
 go install github.com/rokuosan/qrg@latest
 ```
 
+### Nix
+```bash
+nix shell github:rokuosan/qrg
+```
 ## Usage
 
 ```bash
