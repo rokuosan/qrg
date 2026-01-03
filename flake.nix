@@ -45,8 +45,8 @@
 
           ldflags = [
             "-s" "-w"
-            "-X" "main.version=${version}"
-            "-X" "main.commit=${commit}"
+            "-X" "github.com/rokuosan/qrg/cmd.version=${version}"
+            "-X" "github.com/rokuosan/qrg/cmd.commit=${commit}"
             "-X" "main.date=${date}"
             "-X" "main.builtBy=nix"
           ];
