@@ -44,7 +44,6 @@
           "-s" "-w"
           "-X" "github.com/rokuosan/qrg/cmd.version=${version}"
           "-X" "github.com/rokuosan/qrg/cmd.commit=${commit}"
-          "-X" "main.builtBy=nix"
         ];
 
         env.CGO_ENABLED = "0";
