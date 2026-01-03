@@ -32,8 +32,7 @@
           inherit version;
           src = self;
 
-          # nix build すると正しいハッシュがエラーに出るので貼り替える
-          vendorHash = lib.fakeHash;
+          vendorHash = "sha256-wzMLu5HV2Ypebjlc+M4G2n54idbPJE0UZN9KxxehCsE=";
 
           ldflags = [ "-s" "-w" ];
 
