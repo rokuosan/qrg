@@ -55,19 +55,12 @@ var rootCmd = &cobra.Command{
 
 		// Only initialize clipboard when the clipboard flag is used
 		if params.clipboard {
-			// clipboard.Init() panics instead of returning an error when CGO_ENABLED=0
-			// So we need to recover from the panic
-			func() {
-				defer func() {
-					if r := recover(); r != nil {
-						fmt.Println("Error: Failed to initialize clipboard.")
-						fmt.Println("This may happen if the binary was built with CGO_ENABLED=0.")
-						fmt.Println("Please use the file output mode instead (remove the -c flag).")
-						os.Exit(1)
-					}
-				}()
-				clipboard.Init()
-			}()
+			if err := initClipboardSafely(); err != nil {
+				fmt.Println("Error: Failed to initialize clipboard.")
+				fmt.Println("This may happen if the binary was built with CGO_ENABLED=0.")
+				fmt.Println("Please use the file output mode instead (remove the -c flag).")
+				return
+			}
 		}
 
 		recoveryLevel, err := parseRecoveryLevel(params.level)
@@ -103,6 +96,19 @@ var rootCmd = &cobra.Command{
 			fmt.Println(params.output)
 		}
 	},
+}
+
+// initClipboardSafely initializes the clipboard with panic recovery.
+// Returns an error if initialization fails or if a panic occurs.
+func initClipboardSafely() (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("clipboard initialization panicked (likely CGO_ENABLED=0): %v", r)
+		}
+	}()
+	
+	err = clipboard.Init()
+	return err
 }
 
 // parseRecoveryLevel は、文字列からqrcode.RecoveryLevelを解析する
