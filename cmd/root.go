@@ -106,7 +106,7 @@ func initClipboardSafely() (err error) {
 			err = fmt.Errorf("clipboard initialization panicked (likely CGO_ENABLED=0): %v", r)
 		}
 	}()
-	
+
 	err = clipboard.Init()
 	return err
 }
